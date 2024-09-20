@@ -1,7 +1,18 @@
+{% if session.username %}
 Viestien määrä: {{ count }}
 <hr>
 {% for message in messages %}
 {{ message.content }}
 <hr>
 {% endfor %}
-<a href="/new">Lähetä viesti</a>
+<a href="/new">Lähetä viesti</a> <a href ="/logout"> Kirjaudu ulos</a>
+{%else%}
+<form action="/login" method="post">
+    <p>Tunnus:<br>
+    <input type="text" name="username"></p> 
+    <p>Salasana<br>
+    <input type="password" name="password"></p>
+    <input type="submit" value="Kirjaudu"> 
+</form> 
+<form action="/register" ><input type="submit"value="Rekisteröidy"> </form>
+{%endif%}
