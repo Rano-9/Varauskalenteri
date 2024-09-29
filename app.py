@@ -50,7 +50,7 @@ def regi():
         password = request.form["password"]
         hash_value = generate_password_hash(password)
         print(hash_value)
-        sql = f"INSERT INTO users (username, password) VALUES ('{username}', '{hash_value}')"
+        sql = f"INSERT INTO users (username, password, admin) VALUES ('{username}', '{hash_value}', 0)"
         db.session.execute(text(sql))
         db.session.commit()
         return(username)
@@ -59,7 +59,19 @@ def regi():
 @app.route("/login", methods=["POST"])
 def login():
     username = request.form["username"]
-    password = request.form["password"]
+    sql = f"SELECT id, password FROM users WHERE username='{username}'"
+    result = db.session.execute(text(sql))
+    user = result.fetchone()
+    if user:
+        print(user)
+        password = request.form["password"]
+        if check_password_hash(user[1],password):
+            return("SUCCESS")
+        else:
+            return("FAILURE")
+    else:
+        return redirect("/")
+    
     session["username"] = username
     return redirect("/")
 
