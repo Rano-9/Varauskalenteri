@@ -1,18 +1,21 @@
-{% if session.username %}
-Viestien määrä: {{ count }}
-<hr>
-{% for message in messages %}
-{{ message.content }}
-<hr>
-{% endfor %}
-<a href="/new">Lähetä viesti</a> <a href ="/logout"> Kirjaudu ulos</a>
-{%else%}
-<form action="/login" method="post">
-    <p>Tunnus:<br>
-    <input type="text" name="username"></p> 
-    <p>Salasana<br>
-    <input type="password" name="password"></p>
-    <input type="submit" value="Kirjaudu"> 
-</form> 
-<form action="/register" ><input type="submit"value="Rekisteröidy"> </form>
+TERVERTULOA KALENTERIIN TYÖMAA ON TYÖMAA
+VOIT KIRJAUTUA <a href="/login">TÄÄLTÄ</a>
+{%if session.user_id%}
+
+<h1>MORO</h1>
+
+<p>Voit kirjautua ulos <a href="/logout">tästä</a></p>
+<br>
+<form action="/tilat/new" method="post">Voit lisätä tiloja tästä <br>
+    Tilan nimi <input type="text" name="tilan nimi" required> <br>
+    Tilan haltija <input type="text" name="tilan haltija"> <br>
+    <button type="submit" value="Lähetä">Lähetä</button>
+</form>
+{%endif%}
+{%if tilat%}
+    {%for i in tilat %}
+        {%if i[2] == 1%}
+            <li ><a href="tilat/{{i[0]}}"> {{i[1]}}</a></li>
+        {%endif%}
+    {%endfor%}
 {%endif%}

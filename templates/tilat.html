@@ -1,0 +1,15 @@
+<h1>{{data[0]}}</h1>
+<p>Meneillään oleva tapahtuma</p>
+<p>Tulevat varaukset</p>
+<p>Kommentit</p>
+{%if kommentit%}
+    {%for i in kommentit%}
+    <li>{{i[0]}}</li>
+    {%endfor%}
+{%endif%}
+<br>
+<form action="{{tid}}/new" method="post">Lisää kommentti
+<br>
+<input type="text" name="kommentti">
+<button type="submit">Lähetä</button>
+</form>
