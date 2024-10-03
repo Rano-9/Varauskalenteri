@@ -4,13 +4,16 @@ from db import db
 from sqlalchemy import text
 import users
 import tilat
+import haltijat
 
 @app.route("/")
 def index():
     try:
         if users.onko:
             lista = tilat.hae_tilat()
-            return render_template("index.html", tilat= lista)
+            haltijal = haltijat.hae_haltijat() 
+            
+            return render_template("index.html", tilat= lista, haltijat=haltijal)
     except:
         return render_template("index.html") 
 
@@ -48,7 +51,8 @@ def logout():
 @app.route("/tilat/new", methods = ["POST"])
 def new():
     name = request.form["tilan nimi"]
-    halt = request.form["tilan haltija"]
+    halt = request.form["halt"]
+    print(name,halt)
     if tilat.lisää_tila(name,halt):
         return redirect("/")
     return redirect("/")
@@ -56,15 +60,22 @@ def new():
 @app.route("/tilat/<int:id>")
 def tila(id):
      
-    sql = f"SELECT nimi FROM Tilat WHERE id ={id}"
-    query = db.session.execute(text(sql))
-    vastaus = query.fetchone()
-    sql = f"SELECT kommentti FROM Kommentit WHERE tila = {id} AND näkyvä = true"
-    query = db.session.execute(text(sql))
-    kommentit = query.fetchall()
+    vastaus = tilat.hae_tila(id)
+    kommentit = tilat.hae_kommentit(id)
+    
     return render_template("tilat.html", data=vastaus, tid=f"{id}", kommentit=kommentit)
+
 @app.route("/tilat/<int:id>/new", methods = ["POST"])
 def kom(id):
     kommentti = request.form["kommentti"]
     tilat.lisaa_kommentti(kommentti,id)
     return redirect(f"/tilat/{id}")
+
+@app.route("/tilat/<int:id>/del")
+def ptila(id):
+    tilat.poista_tila(id)
+    return redirect("/")
+@app.route("/tilat/<ind:id>/res")
+def rtila(id):
+    tilat.palauta_tila(id)
+    return redirect("/")

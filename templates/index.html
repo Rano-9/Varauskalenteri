@@ -6,16 +6,29 @@ VOIT KIRJAUTUA <a href="/login">TÄÄLTÄ</a>
 
 <p>Voit kirjautua ulos <a href="/logout">tästä</a></p>
 <br>
+
 <form action="/tilat/new" method="post">Voit lisätä tiloja tästä <br>
     Tilan nimi <input type="text" name="tilan nimi" required> <br>
-    Tilan haltija <input type="text" name="tilan haltija"> <br>
+    Tilan haltija <select name="halt">
+        {%for i in haltijat%}
+            <option value = {{i[1]}} selected>{{i[1]}}</option>
+        {%endfor%}
+    </select>
+    <br>
     <button type="submit" value="Lähetä">Lähetä</button>
 </form>
 {%endif%}
 {%if tilat%}
     {%for i in tilat %}
         {%if i[2] == 1%}
-            <li ><a href="tilat/{{i[0]}}"> {{i[1]}}</a></li>
+            
+            <li ><a href="/tilat/{{i[0]}}"> {{i[1]}}</a>
+            {%if session.admin%}
+                <button onclick="location.href = '/tilat/{{i[0]}}/del';"> Poista tila</button></li>
+
+            {%else%}
+                </li>
+            {%endif%}
         {%endif%}
     {%endfor%}
 {%endif%}
