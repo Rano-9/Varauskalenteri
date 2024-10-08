@@ -4,7 +4,7 @@ from flask import session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 def login(user, sana):
-    sql = f"SELECT id, password, admin FROM users WHERE username = '{user}'"
+    sql = f"SELECT id, password, admin FROM users WHERE username = '{str.lower(user)}'"
     result = db.session.execute(text(sql))
     user = result.fetchone()
 
@@ -31,18 +31,16 @@ def logout():
         return False
     
 def register(user,sana):
+    sql = f"SELECT id FROM Users WHERE username = '{str.lower(user)}'"
+    result = db.session.execute(text(sql))
+    if result.fetchone():
+        return False
     salattu = generate_password_hash(sana)
-    if user == "Rano":
-        sql = f"SELECT id FROM users WHERE username = 'Rano'"
-        result = db.session.execute(text(sql))
-        if result.fetchone():
-            return False
-        else:
-            sql = f"INSERT INTO users (username,password,admin) VALUES ('{user}','{salattu}',True)"
-            db.session.execute(text(sql))
-            db.session.commit()
     try:
-        sql = f"INSERT INTO users (username,password,admin) VALUES ('{user}','{salattu}',False)"
+        if str.lower(user) == "rano":
+            sql = f"INSERT INTO users (username,password,admin) VALUES ('{str.lower(user)}','{salattu}',True)"
+        else:
+            sql = f"INSERT INTO users (username,password,admin) VALUES ('{str.lower(user)}','{salattu}',False)"
         db.session.execute(text(sql))
         db.session.commit()
 
@@ -55,3 +53,8 @@ def onko():
         return session["user_id"]
     except:
         return False
+
+def hae_käyttäjät():
+    sql = "SELECT * FROM Users"
+    result = db.session.execute(text(sql))
+    return result.fetchall()

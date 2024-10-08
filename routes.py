@@ -27,8 +27,9 @@ def register():
         sana = request.form["password"]
         if users.register(user,sana):
             return redirect("/")
-        else: 
-            return render_template("register.html")
+        else:
+            return redirect("/register/error")
+            
 
 @app.route("/login",methods = ["GET","POST"])
 def login():
@@ -40,13 +41,17 @@ def login():
         if users.login(user,sana):
             return redirect("/")
         else:
-            return redirect("/")
+            return redirect("/login/error")
         
 @app.route("/logout")
 def logout():
     if users.logout():
         return redirect("/")
-    return redirect("/")
+    return redirect("/logout/error")
+
+@app.route("/users")
+def U_index():
+    return render_template("users.html", data = users.hae_käyttäjät())
 
 @app.route("/tilat/new", methods = ["POST"])
 def new():
@@ -55,7 +60,7 @@ def new():
     print(name,halt)
     if tilat.lisää_tila(name,halt):
         return redirect("/")
-    return redirect("/")
+    return redirect("/tilat/error")
 
 @app.route("/tilat/<int:id>")
 def tila(id):
@@ -80,7 +85,7 @@ def rtila(id):
     tilat.palauta_tila(id)
     return redirect("/")
 
-@app.route("/haltijat/")
+@app.route("/haltijat")
 def H_index():
     lista = haltijat.hae_haltijat()
 
@@ -93,3 +98,7 @@ def H_new():
     email = request.form["email"]
     haltijat.lisää_haltija(nimi,puh,email)
     return redirect("/haltijat/")
+
+@app.route("/<path:path>/error")
+def error_catch(path):
+    return render_template("error.html",path=path)
