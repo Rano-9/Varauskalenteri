@@ -4,7 +4,7 @@ from flask import session
 import haltijat
 
 def lisää_tila(name,halt=None):
-    
+    if session["admin"]:
         sql = f"SELECT * FROM Tilat WHERE nimi = '{name}'"
         query =db.session.execute(text(sql))
         tila = query.fetchone()
@@ -60,6 +60,7 @@ def lisaa_kommentti(kommentti,id):
     db.session.execute(text(sql))
     db.session.commit()
     return True
+
 
 #sql = f"INSERT INTO Haltijat (nimi, tila) VALUES ('{halt}',False)"
 #            db.session.execute(text(sql))

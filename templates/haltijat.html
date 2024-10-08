@@ -1,0 +1,16 @@
+{%if session.admin%}
+    TILAN HALLITSIJOIDEN OHJAUSSIVU
+    {%for i in data%}
+        <li><a href="/haltijat/{{i.id}}">{{i.nimi}}</a></li>
+    {%endfor%}
+    <form action="/haltijat/new" method="post">Lisää uusi haltija <br>
+        <label>Nimi<input type="text" required name="nimi"></label> <br>
+        <label>Puh <input type="text" name="puh"></label> <br>
+        <label>Email <input type="email" name="email"></label> <br>
+        <button type="submit">Lisää</button> 
+    </form>
+
+
+{%else%}
+    HANKI ADMIN :D
+{%endif%}

@@ -6,7 +6,7 @@ VOIT KIRJAUTUA <a href="/login">TÄÄLTÄ</a>
 
 <p>Voit kirjautua ulos <a href="/logout">tästä</a></p>
 <br>
-
+{%if session.admin %}
 <form action="/tilat/new" method="post">Voit lisätä tiloja tästä <br>
     Tilan nimi <input type="text" name="tilan nimi" required> <br>
     Tilan haltija <select name="halt">
@@ -17,6 +17,9 @@ VOIT KIRJAUTUA <a href="/login">TÄÄLTÄ</a>
     <br>
     <button type="submit" value="Lähetä">Lähetä</button>
 </form>
+<P>haltija hallinta <a href="/haltijat">Tästä</a></P>
+<P>käyttäjä hallinta <a href="/users">Tästä</a></P>
+{%endif%}
 {%endif%}
 {%if tilat%}
     {%for i in tilat %}
