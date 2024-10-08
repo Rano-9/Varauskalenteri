@@ -75,7 +75,21 @@ def kom(id):
 def ptila(id):
     tilat.poista_tila(id)
     return redirect("/")
-@app.route("/tilat/<ind:id>/res")
+@app.route("/tilat/<int:id>/res")
 def rtila(id):
     tilat.palauta_tila(id)
     return redirect("/")
+
+@app.route("/haltijat/")
+def H_index():
+    lista = haltijat.hae_haltijat()
+
+    return render_template("haltijat.html", data=lista )
+
+@app.route("/haltijat/new", methods = ["POST"])
+def H_new():
+    nimi = request.form["nimi"]
+    puh = request.form["puh"]
+    email = request.form["email"]
+    haltijat.lisää_haltija(nimi,puh,email)
+    return redirect("/haltijat/")
