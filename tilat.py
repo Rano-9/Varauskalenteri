@@ -5,8 +5,8 @@ import haltijat
 
 def lisää_tila(name,halt=None):
     if session["admin"]:
-        sql = f"SELECT * FROM Tilat WHERE nimi = '{name}'"
-        query =db.session.execute(text(sql))
+        sql = "SELECT * FROM Tilat WHERE nimi = :name"
+        query =db.session.execute(text(sql),{"name":name})
         tila = query.fetchone()
         if tila:
             return False
@@ -14,50 +14,51 @@ def lisää_tila(name,halt=None):
 
         if halt:
             haltija = haltijat.hae_haltija(halt)         
-            sql = f"INSERT INTO Tilat (nimi, näkyvä, haltija) VALUES ('{name}', true, {haltija[0]})"
+            sql = "INSERT INTO Tilat (nimi, näkyvä, haltija) VALUES (:name, true, :haltija)"
+            db.session.execute(text(sql),{"name":name,"haltija":haltija[0]})
         else:
-            sql = f"INSERT INTO Tilat (nimi, näkyvä) VALUES ('{name}', true)"
-        db.session.execute(text(sql))
-        db.session.commit()
+            sql = "INSERT INTO Tilat (nimi, näkyvä) VALUES (:name, true)"
+            db.session.execute(text(sql),{"name":name})
         
-            
+        db.session.commit()    
         return True
 
 def poista_tila(id):
     if session["admin"]:
-        sql = f"UPDATE tilat SET näkyvä=FALSE WHERE id={id}"
-        db.session.execute(text(sql))
+        sql = "UPDATE tilat SET näkyvä=FALSE WHERE id=:id"
+        db.session.execute(text(sql),{"id":id})
         db.session.commit()
     
 
 def palauta_tila(id):
     if session["admin"]:
-        sql = f"UPDATE tilat SET näkyvä=TRUE WHERE id={id}"
-        db.session.execute(text(sql))
+        sql = "UPDATE tilat SET näkyvä=TRUE WHERE id=:id"
+        db.session.execute(text(sql),{"id":id})
         db.session.commit()
 
 def hae_tilat():
-    sql = f"SELECT * FROM Tilat"
+    sql = "SELECT * FROM Tilat WHERE näkyvä=TRUE"
     query = db.session.execute(text(sql))
     tilat = query.fetchall()
     return tilat
 
 def hae_tila(id):
-    sql = f"SELECT nimi FROM Tilat WHERE id ={id}"
-    query = db.session.execute(text(sql))
+    sql = "SELECT nimi FROM Tilat WHERE id =:id"
+    t = text(sql)
+    query = db.session.execute(t,{"id":id})
     vastaus = query.fetchone()
     return vastaus
 
 def hae_kommentit(id):
-    sql = f"SELECT kommentti, id FROM Kommentit WHERE tila = {id} AND näkyvä = true"
-    query = db.session.execute(text(sql))
+    sql = "SELECT kommentti, id FROM Kommentit WHERE tila = :id AND näkyvä =TRUE"
+    query = db.session.execute(text(sql),{"id":id})
     kommentit = query.fetchall()
     return kommentit
 
 def lisaa_kommentti(kommentti,id):
     toija = session["user_id"]
-    sql = f"INSERT INTO kommentit (tila, kommentti, luoja, näkyvä) VALUES ({id},'{kommentti}', {toija}, True)"
-    db.session.execute(text(sql))
+    sql = "INSERT INTO kommentit (tila, kommentti, luoja, näkyvä) VALUES (:id,:kommentti, :toija, True)"
+    db.session.execute(text(sql),{"id":id,"kommentti":kommentti,"toija":toija,})
     db.session.commit()
     return True
 
