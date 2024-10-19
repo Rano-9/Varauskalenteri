@@ -67,6 +67,7 @@ def tila(id):
      
     vastaus = tilat.hae_tila(id)
     kommentit = tilat.hae_kommentit(id)
+    print(kommentit)
     
     return render_template("tilat.html", data=vastaus, tid=f"{id}", kommentit=kommentit)
 
