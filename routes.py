@@ -1,10 +1,12 @@
 from app import app
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, session
 from db import db
 from sqlalchemy import text
+import datetime
 import users
 import tilat
 import haltijat
+import varaus
 
 @app.route("/")
 def index():
@@ -49,10 +51,6 @@ def logout():
         return redirect("/")
     return redirect("/logout/error")
 
-@app.route("/users")
-def U_index():
-    return render_template("users.html", data = users.hae_käyttäjät())
-
 @app.route("/tilat/new", methods = ["POST"])
 def new():
     name = request.form["tilan nimi"]
@@ -67,9 +65,18 @@ def tila(id):
      
     vastaus = tilat.hae_tila(id)
     kommentit = tilat.hae_kommentit(id)
-    print(kommentit)
-    
-    return render_template("tilat.html", data=vastaus, tid=f"{id}", kommentit=kommentit)
+    varaukset = varaus.hae_varaukset(id)
+    tänään = []
+    tulevat = []
+    for i in varaukset:
+        päivä = str.split(i.päivä, " ")
+        print(päivä,datetime.date.today())
+        if päivä[0] == str(datetime.date.today()):
+            tänään.append(i)
+            print(i.päivä)
+        else:
+            tulevat.append(i)
+    return render_template("tilat.html", data=vastaus, tid=f"{id}", kommentit=kommentit,varaukset=varaukset,tänään=tänään,tulevat=tulevat)
 
 @app.route("/tilat/<int:id>/new", methods = ["POST"])
 def kom(id):
@@ -86,6 +93,26 @@ def rtila(id):
     tilat.palauta_tila(id)
     return redirect("/")
 
+@app.route("/tilat/<int:id>/varaa", methods = ["POST","GET"])
+def vtila(id):
+
+        user_id = session["user_id"]
+        if request.method == "POST":
+            nimi = request.form["nimi"]
+            kuvaus = request.form["kuvaus"]
+            päivä = request.form["päivä"]
+            aika = request.form["aika"]
+            dt = päivä + " "+ aika
+            varaus.lisää_varaus(nimi,kuvaus,dt,id,user_id)
+
+            return redirect(f"/tilat/{id}")
+
+        if request.method == "GET":
+            tila = tilat.hae_tila(id)
+            return render_template("varaus.html", id=id,tila=tila)
+
+        return redirect("tilat/error")
+
 @app.route("/haltijat")
 def H_index():
     lista = haltijat.hae_haltijat()
@@ -98,8 +125,12 @@ def H_new():
     puh = request.form["puh"]
     email = request.form["email"]
     haltijat.lisää_haltija(nimi,puh,email)
-    return redirect("/haltijat/")
+    return redirect("/haltijat")
 
 @app.route("/<path:path>/error")
 def error_catch(path):
     return render_template("error.html",path=path)
+
+@app.route("/error")
+def bad_error():
+    return redirect("/")

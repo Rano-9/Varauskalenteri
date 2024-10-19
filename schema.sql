@@ -1,6 +1,8 @@
 
 CREATE TABLE Users (id SERIAL PRIMARY KEY, username TEXT, PASSWORD TEXT, admin boolean);
 CREATE TABLE Tilat (id SERIAL PRIMARY KEY, nimi TEXT, näkyvä BOOLEAN, haltija INT);
-CREATE TABLE Haltija_tiedot (id INT, puh TEXT, email TEXT);
-CREATE TABLE Haltijat (id SERIAL PRIMARY KEY, nimi TEXT, tila BOOLEAN);
-CREATE TABLE Kommentit (id SERIAL PRIMARY KEY, tila INT, luonti TIMESTAMP, kommentti TEXT);
+CREATE TABLE Haltija_tiedot (id INT, nimi TEXT, puh TEXT, email TEXT);
+CREATE TABLE Haltijat (id SERIAL PRIMARY KEY, näkyvä BOOLEAN);
+CREATE TABLE Kommentit (id SERIAL PRIMARY KEY, tila INT, luonti TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP(0), kommentti TEXT, luoja int, näkyvä BOOLEAN);
+CREATE TABLE Varaukset (id SERIAL PRIMARY KEY, tila INT, päivä TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP(0),näkyvä BOOLEAN);
+CREATE TABLE Varaus_tiedot (id INT, luoja INT, nimi TEXT, kuvaus TEXT);

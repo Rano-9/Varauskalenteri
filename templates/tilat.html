@@ -1,6 +1,12 @@
 <h1>{{data[0]}}</h1>
-<p>Meneillään oleva tapahtuma</p>
+<p>Tänään olevat varaukset</p>
+{%for i in tänään%}
+    <li>{{i.päivä}} // {{i.nimi}} // {{i.kuvaus}} // {{i.username}}</li>
+{%endfor%}
 <p>Tulevat varaukset</p>
+{%for i in tulevat%}
+    <li>{{i.päivä}} // {{i.nimi}} // {{i.kuvaus}} // {{i.username}}</li>
+{%endfor%}
 <p>Kommentit</p>
 
 {%if kommentit%}
@@ -16,4 +22,6 @@
 <input type="text" name="kommentti" required>
 <button type="submit">Lähetä</button>
 </form>
+<a href="./{{tid}}/varaa">Varaa tila</a>
+
 {%endif%}
