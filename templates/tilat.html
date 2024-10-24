@@ -1,3 +1,5 @@
+{% extends "layout.html" %}
+{% block content %}
 <h1>{{data[0]}}</h1>
 <p>Tänään olevat varaukset</p>
 {%for i in tänään%}
@@ -25,3 +27,4 @@
 <a href="./{{tid}}/varaa">Varaa tila</a>
 
 {%endif%}
+{%endblock%}

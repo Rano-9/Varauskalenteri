@@ -1,0 +1,38 @@
+<!doctype html>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<title>Varauskalenteri</title>
+<div class="container">
+  <nav class="navbar navbar-expand-sm navbar-light">
+    <a class="navbar-brand" href="#">Varauskalenteri</a>
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        {%if not session%}
+            <form action="/login" method="post">
+            <div class="nav-item">
+                <label>username</label>
+                <input type="text" name="username" required>
+            </div>
+            
+            <div class="nav-item">
+                <label>password</label>
+                <input type="password" name="password">
+                
+                <button type="submit">Kirjaudu</button>
+                
+
+            </form>
+            <a href="/register">
+            <button type="button" >Rekisteröidy</button>
+            </a>
+            </div>
+        {%endif%}
+        {%if session%}
+            <div class="nav-item">
+                voit kirjautua ulos <a href="/logout">tästä</a>
+            </div>
+        {%endif%}
+      </li>
+    </ul>
+  </nav>
+  {% block content %}{% endblock %}

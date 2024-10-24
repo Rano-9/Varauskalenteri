@@ -1,5 +1,6 @@
-TERVERTULOA KALENTERIIN TYÖMAA ON TYÖMAA <br>
-VOIT KIRJAUTUA <a href="/login">TÄÄLTÄ</a>
+{% extends "layout.html" %}
+{% block content %}
+
 {%if session.user_id%}
 
 <h1>MORO</h1>
@@ -35,3 +36,5 @@ VOIT KIRJAUTUA <a href="/login">TÄÄLTÄ</a>
         {%endif%}
     {%endfor%}
 {%endif%}
+</div>
+{% endblock %}
